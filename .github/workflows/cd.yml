@@ -17,3 +17,5 @@ jobs:
           docker rm react-apache-container || true
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app:latest
           docker run -d -p 80:80 --name react-apache-container ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app
+
+          
