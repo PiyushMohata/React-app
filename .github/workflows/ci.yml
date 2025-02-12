@@ -1,0 +1,27 @@
+name: CI - Build and Push React App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app .
+
+      - name: Login to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Push Docker Image to Docker Hub
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app:latest

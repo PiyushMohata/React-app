@@ -1,0 +1,19 @@
+name: CD - Deploy React App on EC2
+
+on:
+  workflow_run:
+    workflows: ["CI - Build and Push React App"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: self-hosted 
+
+    steps:
+      - name: Pull Latest Docker Image
+        run: |
+          docker stop react-apache-container || true
+          docker rm react-apache-container || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app:latest
+          docker run -d -p 80:80 --name react-apache-container ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app

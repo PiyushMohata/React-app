@@ -1,12 +1,12 @@
-FROM node:18 as build
+FROM node:18 AS build
 WORKDIR /app
-COPY package*.json ./
-COPY . .
-RUN npm install && npm run build
+COPY . . 
+RUN npm install && npm run build  
 
 FROM httpd:2.4
-WORKDIR /var/www/html
-COPY --from=build /app/dist/ /var/www/html/
+WORKDIR /usr/local/apache2/htdocs
+COPY --from=build /app/dist/ . 
+
 RUN sed -i 's/Require all denied/Require all granted/' /usr/local/apache2/conf/httpd.conf
 
 EXPOSE 80
