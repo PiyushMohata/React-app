@@ -15,6 +15,5 @@ jobs:
         run: |
           docker stop react-apache-container || true
           docker rm react-apache-container || true
-          docker image prune -f
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app:latest
           docker run -d -p 80:80 --name react-apache-container ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app
