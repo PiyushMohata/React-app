@@ -15,7 +15,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app:latest .
 
       - name: Login to Docker Hub
         run: |
@@ -23,5 +23,4 @@ jobs:
 
       - name: Push Docker Image to Docker Hub
         run: |
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app:latest
