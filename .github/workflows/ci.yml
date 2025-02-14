@@ -1,4 +1,4 @@
-name: CI - Build and Push React App
+name: CI/CD - Build, Push, and Deploy React App
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    name: CI pipeline
     runs-on: self-hosted
 
     steps:
@@ -21,3 +22,17 @@ jobs:
       - name: Push Docker Image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app:latest
+
+  deploy:
+    name: CD pipeline
+    needs: build
+    runs-on: self-hosted
+
+    steps:
+      - name: Pull Latest Docker Image and Deploy
+        run: |
+          docker stop react-apache-container || true
+          docker rm react-apache-container || true
+          docker image prune -a -f
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app:latest
+          docker run -d -p 80:80 --name react-apache-container ${{ secrets.DOCKERHUB_USERNAME }}/react-apache-app
